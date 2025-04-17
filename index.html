@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>كشف المواقع الاحتيالية | تحقق من الروابط المشبوهة</title>
+
+  <!-- SEO -->
+  <meta name="description" content="تحقق مجاناً من الروابط المشبوهة باستخدام قاعدة بيانات مفتوحة المصدر للمواقع الاحتيالية. احمِ نفسك من التصيد والاحتيال.">
+  <meta name="keywords" content="كشف المواقع الاحتيالية, فحص الروابط, تصيد إلكتروني, مواقع مزيفة, روابط مشبوهة, حماية الإنترنت">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="كشف المواقع الاحتيالية | تحقق من الروابط قبل زيارتها">
+  <meta property="og:description" content="تحقق الآن من الروابط وتأكد من أنها ليست احتيالية باستخدام قاعدة بيانات مجانية. لا تشارك بياناتك قبل التأكد!">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://suhbgo.github.io">
+  <meta property="og:image" content="https://suhbgo.github.io/og-image.png">
+  <link rel="icon" href="detective.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Zain&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Zain", sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      direction: rtl;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input {
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .safe {
+      color: white;
+      background-color: green;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .phishing {
+      color: white;
+      background-color: red;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .lang-switch {
+      margin-top: 10px;
+    }
+
+    .lang-switch button {
+      width: auto;
+      margin: 0 5px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .box {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      .result {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <div class="lang-switch">
+      <button onclick="setLanguage('ar')">العربية</button>
+      <button onclick="setLanguage('en')">English</button>
+      <button onclick="setLanguage('fr')">Français</button>
+    </div>
+
+    <h1 id="title">تحقق من الروابط </h1>
+    <p id="desc">هذه الأداة تقوم بكشف المواقع الاحتيالية</p>
+    <input type="text" id="url" placeholder="أدخل رابط الموقع (مثال: https://example.com)">
+    <button onclick="checkURL()" id="checkBtn">تحقق</button>
+    <div id="result" class="result"></div>
+    <p id="warning" style="color: red; font-style: italic; margin-top: 15px;">
+      تنبيه: قاعدة البيانات لا تُحدَّث يومياً، وقد يُعرض موقع آمن لكنه احتيالي. لا تشارك بياناتك قبل التأكد.
+    </p>
+    <p id="lastUpdated" style="color: red; font-style: italic; margin-top: 15px;">آخر تحديث: جاري التحميل... </p>
+  </div>
+  <p style="text-align: center;"><a href="https://github.com/suhbgo" target="_blank" >Github </a> & <a href="https://x.com/suhbgo" target="_blank"> Twitter(X) </a></p>
+
+  <script>
+    const translations = {
+      ar: {
+        dir: "rtl",
+        title: "تحقق من الروابط",
+        desc: "هذه الأداة تقوم بكشف المواقع الاحتيالية",
+        checkBtn: "تحقق",
+        warning: "تنبيه: قاعدة البيانات لا تُحدَّث يومياً، وقد يُعرض موقع آمن لكنه احتيالي. لا تشارك بياناتك قبل التأكد.",
+        invalid: "⚠️ الرابط غير صالح.",
+        checking: "🔄 جارٍ التحقق...",
+        safe: "✅ الموقع آمن.",
+        phishing: "🚨 الموقع احتيالي!",
+        failed: "⚠️ فشل تحميل قاعدة البيانات."
+      },
+      en: {
+        dir: "ltr",
+        title: "Check Links",
+        desc: "This tool detects phishing websites.",
+        checkBtn: "Check",
+        warning: "Warning: The database isn't updated daily. A site may appear safe but actually be phishing. Never share personal info without verifying!",
+        invalid: "⚠️ Invalid URL.",
+        checking: "🔄 Checking...",
+        safe: "✅ The site is safe.",
+        phishing: "🚨 Phishing site!",
+        failed: "⚠️ Failed to load the database.",
+        
+      },
+      fr: {
+        dir: "ltr",
+        title: "Vérifiez les liens",
+        desc: "Cet outil détecte les sites d’hameçonnage.",
+        checkBtn: "Vérifier",
+        warning: "Attention : la base de données n'est pas mise à jour tous les jours. Un site peut sembler sûr mais être frauduleux. Ne partagez aucune info sans vérification.",
+        invalid: "⚠️ Lien invalide.",
+        checking: "🔄 Vérification...",
+        safe: "✅ Le site est sûr.",
+        phishing: "🚨 Site frauduleux !",
+        failed: "⚠️ Échec du chargement de la base de données."
+      }
+    };
+
+    let currentLang = 'ar';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = t.dir;
+
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("desc").textContent = t.desc;
+      document.getElementById("checkBtn").textContent = t.checkBtn;
+      document.getElementById("warning").textContent = t.warning;
+      document.getElementById("url").placeholder =
+        lang === 'ar'
+          ? "أدخل رابط الموقع (مثال: https://example.com)"
+          : lang === 'en'
+          ? "Enter website URL (e.g., https://example.com)"
+          : "Entrez l'URL du site (ex: https://example.com)";
+    }
+
+    async function checkURL() {
+      const input = document.getElementById('url').value.trim();
+      const result = document.getElementById('result');
+      const t = translations[currentLang];
+      result.textContent = t.checking;
+      result.className = "result";
+
+      let url = input;
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "http://" + url;
+      }
+
+      let host;
+      try {
+        const parsed = new URL(url);
+        host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+      } catch (e) {
+        result.textContent = t.invalid;
+        return;
+      }
+
+      try {
+        const res1 = await fetch("https://raw.githubusercontent.com/Phishing-Database/Phishing.Database/refs/heads/master/phishing-links-ACTIVE.txt");
+        const res2 = await fetch("https://raw.githubusercontent.com/Phishing-Database/Phishing.Database/master/phishing-links-NEW-today.txt");
+        const res3 = await fetch("https://raw.githubusercontent.com/Phishing-Database/Phishing.Database/refs/heads/master/phishing-links-INACTIVE.txt");
+
+        const links = (await res1.text()).split("\n")
+          .concat((await res2.text()).split("\n"))
+          .concat((await res3.text()).split("\n"));
+
+        const found = links.some(phishURL => {
+          try {
+            const phishHost = new URL(phishURL.trim()).hostname.toLowerCase().replace(/^www\./, '');
+            return host === phishHost || host.endsWith('.' + phishHost);
+          } catch {
+            return false;
+          }
+        });
+
+        if (found) {
+          result.textContent = t.phishing;
+          result.className = "result phishing";
+        } else {
+          result.textContent = t.safe;
+          result.className = "result safe";
+        }
+      } catch (e) {
+        result.textContent = t.failed;
+        console.error(e);
+      }
+    }
+
+    async function fetchLastUpdated() {
+      const res = await fetch('https://api.github.com/repos/Phishing-Database/Phishing.Database/commits');
+      const data = await res.json();
+      const lastCommit = data[0].commit.author.date;
+      document.getElementById('lastUpdated').textContent = `آخر تحديث: ${new Date(lastCommit).toLocaleString()}`;
+    }
+
+    window.onload = fetchLastUpdated;
+
+    setLanguage('ar'); // اللغة الافتراضية
+  </script>
+
+</body>
+</html>
